@@ -4,9 +4,6 @@ import numpy as np
 from sympy import *
 import matplotlib.pyplot as plt 
 
-
-
-
 num , den = sig.ellip(4, 1, 40, (200, 3400), 'bandpass', True, 'ba')
 num_che, den_che = sig.cheby1(6, 1, (200, 3400), 'bandpass', analog = True, output='ba')
 

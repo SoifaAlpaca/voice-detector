@@ -1,0 +1,21 @@
+* C:\Users\sofia\OneDrive - FCT NOVA\Documentos\PlatformIO\Projects\voice-detector\Draft2.asc
+C3 vp vi 40.576n
+R3 vp 0 120.924k
+R5 N002 0 18k
+R4 v1 N002 66.299k
+R1 vx v1 3.330k
+R2 N001 vx 62.900k
+C2 N001 0 0.9n
+C1 vout vx 0.9n
+V1 0 vss 12
+V2 vdd 0 12
+V3 NC_01 0 PULSE(0 1 0 1u 1u 10m 20m 10) AC 1
+XU1 vp N002 vdd vss v1 level1 Avol=1Meg GBW=10Meg Vos=0 En=0 Enk=0 In=0 Ink=0 Rin=500Meg
+XU2 N001 vout vdd vss vout level1 Avol=1Meg GBW=10Meg Vos=0 En=0 Enk=0 In=0 Ink=0 Rin=500Meg
+V4 vi 0 SINE(0 1 1k 1u 1u 10m 100) AC 1
+* .ac dec 1000 10 1Meg
+.tran 100m
+* .op
+.lib UniversalOpAmp1.lib
+.backanno
+.end

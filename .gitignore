@@ -8,3 +8,7 @@ report/main.*
 !report/main.tex
 
 include/Creds.h
+
+ltspice/*
+!ltspice/*.asc
+!ltspice/*.txt

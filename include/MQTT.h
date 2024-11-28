@@ -90,4 +90,44 @@ void reconnect() {
   }
 }
 
+/*
+void MqttTask(void *pvParameters){
+
+  char* aux;
+  char* OnStr   = "On";
+  char* OffStr  = "Off";
+  char  stg[2]  = {0};
+  long  now;
+  long  lastMsg = 0;
+
+  while( true ){
+
+    if (!client.connected()) {
+      reconnect();
+    }
+    client.loop();
+
+    now = millis();
+    if(now - lastMsg > SendRate){
+
+      client.publish(TopicState, "On");
+      lastMsg = now;
+    }
+
+    if( xSemaphoreTake(SendSem, 1000) == pdTRUE){
+      
+      aux = PumpOn ? OnStr : OffStr;
+      client.publish(TopicPumpState, aux);
+      
+      stg[0] = stage + '0';
+      client.publish(TopicWateringStage, stg);
+      
+      aux = TransOn ? OnStr : OffStr;
+      client.publish(TopicTransState, aux);
+      
+    }
+  }
+}
+*/
+
 #endif

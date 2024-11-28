@@ -154,3 +154,4 @@ def PlotBode(num,den,labels=[],fmin = -1,fmax = 4,ppd = 1000,title = "Bode Magni
     plt.tight_layout()
     plt.show()
 
+plotScoppyBode("csv/emsfinalanalogbode.csv")

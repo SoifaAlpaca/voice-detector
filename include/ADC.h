@@ -42,13 +42,13 @@ void i2sInit(){
     i2s_adc_enable(I2S_NUM_0);
 }
 
-// val must be 12 bit number
-double uint12_to_Volt(uint16_t val){
-
-    val = val & 0x0FFF;//uint16 -> uint12
-    //Real Voltage in ADC mV
-    double adcV = ADC_MIN_VOLT + ((double)val) * ((ADC_MAX_VOLT - ADC_MIN_VOLT) / (double)ADC_MAX);
-    return 1e3/*To Micro Volt*/ * (adcV - OFFSET) / GAIN /*AFE Gain and Offset*/;
-}
+//// val must be 12 bit number
+//double uint12_to_Volt(uint16_t val){
+//
+//    val = val & 0x0FFF;//uint16 -> uint12
+//    //Real Voltage in ADC mV
+//    double adcV = ADC_MIN_VOLT + ((double)val) * ((ADC_MAX_VOLT - ADC_MIN_VOLT) / (double)ADC_MAX);
+//    return 1e3/*To Micro Volt*/ * (adcV - OFFSET) / GAIN /*AFE Gain and Offset*/;
+//}
 
 #endif

@@ -9,6 +9,7 @@ report/main.*
 
 include/Creds.h
 
+python/__pycache__
 ltspice/*
 !ltspice/*.asc
 !ltspice/*.txt

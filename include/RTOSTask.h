@@ -15,7 +15,7 @@ TaskHandle_t  handle_main;
 TaskHandle_t  handle_listen;
 TaskHandle_t  handle_mqtt;
 
-void timerCallBack  ( TimerHandle_t xTimer );
+void timerCallBack  (TimerHandle_t xTimer);
 void ThreadsSetup   ();
 void MainThread     (void* args);
 void Listen         (void* args);
@@ -44,7 +44,7 @@ void ThreadsSetup(){
 }
 
 
-void timerCallBack( TimerHandle_t xTimer ){
+void timerCallBack(TimerHandle_t xTimer){
 
     xSemaphoreGive(sem_sleep);
 }
@@ -83,15 +83,21 @@ void MainThread(void* args){
         //FIXME Esta funcao deve demorar se calhar fazer um timer pra cagar no mqtt
         //TODO ver se é preciso vTaskDelete(handle_mqtt);
         update_status(status_idle);
-        vTaskDelete(handle_listen);
+
         //kill all tasks
+        if( handle_listen != NULL){
+            vTaskDelete(handle_listen);
+            handle_listen = NULL;
+        }
     }
 }
 
 void Listen(void* args){
     
-    //if detected 
+    //Wait for word 
+    //stop timer
     xTimerDelete(timer_sleep, 0);
+    //status playing
     xTaskCreate(
         task_MQTT,
         "MQTT Status Thread",
@@ -100,19 +106,19 @@ void Listen(void* args){
         5, 
         &handle_mqtt
     );
-        //stop timer
-        //status playing
         //play
-    
+    //Sleep
     xSemaphoreGive(sem_sleep);
+    handle_listen = NULL;
     vTaskDelete(NULL);
 }
 
 void task_MQTT(void* args){
     
     const char* status = (const char*) args;
-
-    update_status(status);
+    Serial.println("Test");
+    //update_status(status);
+    handle_mqtt = NULL;
     vTaskDelete(NULL);
 }
 

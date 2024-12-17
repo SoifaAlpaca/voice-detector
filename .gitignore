@@ -8,3 +8,8 @@ report/main.*
 !report/main.tex
 
 include/Creds.h
+
+python/__pycache__
+ltspice/*
+!ltspice/*.asc
+!ltspice/*.txt

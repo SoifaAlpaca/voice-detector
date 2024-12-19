@@ -1,17 +1,18 @@
 #include <Arduino.h>
+#include "RTOSTask.h"
+#include "MQTT.h"
 
-int myFunction(int, int);
+void setup(){
+    
+    Serial.begin(115200);
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    //Needs to be the last one
+    esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1); 
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    
+    vTaskDelay(10000);
+    
 }

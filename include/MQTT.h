@@ -7,10 +7,21 @@
 
 #define LOG_MESSAGE_MQTT 1
 
-WiFiClient espClient;
+const char* topic_status    = "esp32/status";
+
+const char* status_idle     = "Idle";
+const char* status_listen   = "Listening";
+const char* status_playing  = "Playing";
+
+WiFiClient   espClient;
 PubSubClient client(espClient);
 
 void callback(char* topic, byte* message, unsigned int length);
+void init_mqtt();
+void init_wifi();
+void reconnect() ;
+void update_status(const char* status);
+
 
 void init_mqtt(){
 
@@ -23,18 +34,18 @@ void init_mqtt(){
 void init_wifi(){
     delay(10);
     // We start by connecting to a WiFi network
-      #if LOG_MESSAGE_MQTT
-          Serial.println();
-          Serial.print("Connecting to ");
-          Serial.println(ssid);
-      #endif
+    #if LOG_MESSAGE_MQTT
+        Serial.println();
+        Serial.print("Connecting to ");
+        Serial.println(ssid);
+    #endif
     WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
         #if LOG_MESSAGE_MQTT
             Serial.print(".");
         #endif
+        delay(500);
     }
 
     #if LOG_MESSAGE_MQTT
@@ -47,7 +58,9 @@ void init_wifi(){
 }
 
 void callback(char* topic, byte* message, unsigned int length) {
-  
+    
+    return ;
+    
     #if LOG_MESSAGE_MQTT
         Serial.print("Message arrived on topic: ");
         Serial.print(topic);
@@ -85,49 +98,23 @@ void reconnect() {
           Serial.println(" try again in 5 seconds");
         #endif
       // Wait 5 seconds before retrying
-      vTaskDelay(5000);
+      vTaskDelay(500);
     }
   }
 }
 
-/*
-void MqttTask(void *pvParameters){
 
-  char* aux;
-  char* OnStr   = "On";
-  char* OffStr  = "Off";
-  char  stg[2]  = {0};
-  long  now;
-  long  lastMsg = 0;
+void update_status(const char* status){
 
-  while( true ){
-
+    init_mqtt();    
     if (!client.connected()) {
-      reconnect();
+        reconnect();
     }
     client.loop();
 
-    now = millis();
-    if(now - lastMsg > SendRate){
-
-      client.publish(TopicState, "On");
-      lastMsg = now;
-    }
-
-    if( xSemaphoreTake(SendSem, 1000) == pdTRUE){
-      
-      aux = PumpOn ? OnStr : OffStr;
-      client.publish(TopicPumpState, aux);
-      
-      stg[0] = stage + '0';
-      client.publish(TopicWateringStage, stg);
-      
-      aux = TransOn ? OnStr : OffStr;
-      client.publish(TopicTransState, aux);
-      
-    }
-  }
+    client.publish(topic_status, status);
+    WiFi.disconnect();
 }
-*/
+
 
 #endif

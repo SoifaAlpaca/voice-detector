@@ -10,6 +10,7 @@ k       = 1000
 Blue    = (       0, 101/255, 189/255 )
 Green   = (  52/255, 129/255,  65/255 )
 Orange  = ( 241/255,  89/255,  41/255 )
+FigDim  = (10, 8)
 
 def PrintTransferFn(num,den,precision = 2):
 
@@ -59,7 +60,7 @@ def plotScoppyBode(path):
 
     #print(df.head())
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=FigDim)
     plt.subplot(2, 1, 1)
     plt.semilogx(df['Frequency(Hz)'], df['Magnitude(dB)'], color=Blue)
     plt.title('Magnitude vs Frequency')
@@ -80,6 +81,7 @@ def plotScoppyBode(path):
 def PlotWindow(FilterWindow):
 
     TimeArray = [n*Ts for n in range(len(FilterWindow))]
+    plt.figure(figsize=FigDim)
     plt.plot(TimeArray, FilterWindow, 'o', markersize=2, color=Blue)
     plt.vlines(TimeArray, ymin=0, ymax=FilterWindow,
                color=Blue, linestyle='-', linewidth=0.5)
@@ -112,7 +114,6 @@ def GenFIRCppHeader(coefs, path=''):
     else:
         print(out)
 
-#TODO ver se funciona
 def PlotBode(num,den,labels=[],fmin = -1,fmax = 4,ppd = 1000,title = "Bode Magnitude Plot"):
 
     if( len(num) != len(den) ):
@@ -133,6 +134,7 @@ def PlotBode(num,den,labels=[],fmin = -1,fmax = 4,ppd = 1000,title = "Bode Magni
     frequencies = np.logspace(fmin, fmax, num=ppd)
     colours = [ Blue,Orange,Green,'black' ]
     # Compute frequency response for each filter
+    plt.figure(figsize=FigDim)
     for i in range(len(num)):
         
         plt.subplot(2, 1, 1)
@@ -153,5 +155,3 @@ def PlotBode(num,den,labels=[],fmin = -1,fmax = 4,ppd = 1000,title = "Bode Magni
 
     plt.tight_layout()
     plt.show()
-
-plotScoppyBode("csv/emsfinalanalogbode.csv")

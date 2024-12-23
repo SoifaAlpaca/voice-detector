@@ -134,7 +134,6 @@ void start_timer(){
         NULL,               
         timerCallBack    
     );
-    Serial.println(sleep_time);
 }
 
 void restart_timer(){

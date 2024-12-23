@@ -6,12 +6,13 @@
 #include "Creds.h"
 
 #define LOG_MESSAGE_MQTT 1
+#define GRAFANA          1 //
 
-const char* topic_status    = "esp32/status";
+const char* topic_status    = "ems/t1/g1";
 
-const char* status_idle     = "Idle";
-const char* status_listen   = "Listening";
-const char* status_playing  = "Playing";
+const char* status_idle     = "0";
+const char* status_listen   = "1";
+const char* status_playing  = "2";
 
 WiFiClient   espClient;
 PubSubClient client(espClient);
@@ -24,16 +25,21 @@ void update_status(const char* status);
 
 
 void init_mqtt(){
+    
+    if( no_mqtt )
+        return;
 
-    init_wifi();
+    if(!WiFi.isConnected()){
+        init_wifi();
+    }
     client.setServer(mqtt_server, mqttPort);
     client.setCallback(callback);
 
 }
 
 void init_wifi(){
-    delay(10);
     // We start by connecting to a WiFi network
+    
     #if LOG_MESSAGE_MQTT
         Serial.println();
         Serial.print("Connecting to ");
@@ -45,7 +51,7 @@ void init_wifi(){
         #if LOG_MESSAGE_MQTT
             Serial.print(".");
         #endif
-        delay(500);
+        vTaskDelay(500);
     }
 
     #if LOG_MESSAGE_MQTT
@@ -74,6 +80,7 @@ void callback(char* topic, byte* message, unsigned int length) {
         #endif
         messageTemp += (char)message[i];
     }
+
 }
 
 
@@ -106,14 +113,39 @@ void reconnect() {
 
 void update_status(const char* status){
 
-    init_mqtt();    
+    if( no_mqtt )
+        return;
+
+    if(!WiFi.isConnected()){
+        init_wifi();
+    }
     if (!client.connected()) {
         reconnect();
     }
     client.loop();
+    char message[100] = "audio,source=esp32 status=";
+    strcat(message,status );
+    char aux[17]     = ",Volume=";
+    String saux((int) (volume * 100.0));
+    strcat(aux,saux.c_str());
+    strcat(message,aux);
 
-    client.publish(topic_status, status);
-    WiFi.disconnect();
+    char aux2[17]     = ",TimeToSleep=";
+    String saux2((int) sleep_time / 1000);
+    strcat(aux2,saux2.c_str());
+    strcat(message,aux2);
+    
+    char aux3[14]     = ",EnableLed=";
+    char c[2]  = " ";
+    c[0] = '0' + led_status;
+    strcat(aux3,c);
+    strcat(message,aux3);
+
+    client.publish(topic_status, message);
+    vTaskDelay(100);
+    Serial.println(message);
+    //client.disconnect();
+    //WiFi.disconnect();
 }
 
 

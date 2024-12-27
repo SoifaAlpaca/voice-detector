@@ -23,10 +23,11 @@ void setup(){
 
 void loop() {
     
+    mqtt_loop();
+
     String command = Serial.readString();
+
     if( command != ""){
-        Serial.print("Command Recieved: ");
-        Serial.println(command);
         read_command(command);
     }
 }

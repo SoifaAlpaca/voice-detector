@@ -8,11 +8,16 @@ def list_serial_ports():
     """Return a list of available serial ports."""
     return [port.device for port in serial.tools.list_ports.comports()]
 
+def refresh_ports():
+    """Refresh the list of available serial ports."""
+    port_combo['values'] = list_serial_ports()
+    log_message("Ports refreshed.")
+
 def toggle_connection():
     """Toggle the serial connection."""
     global serial_connection
 
-    if serial_connection and serial_connection.is_open:
+    if 'serial_connection' in globals() and serial_connection and serial_connection.is_open:
         disconnect()
         connection_button.config(text="Connect")
     else:
@@ -42,7 +47,7 @@ def disconnect():
     """Close the serial connection."""
     global serial_connection
 
-    if serial_connection and serial_connection.is_open:
+    if 'serial_connection' in globals() and serial_connection and serial_connection.is_open:
         serial_connection.close()
         log_message("Serial connection closed.")
 
@@ -52,7 +57,7 @@ def send_command(command):
     """Send a command to the ESP32."""
     global serial_connection
 
-    if not serial_connection or not serial_connection.is_open:
+    if not ('serial_connection' in globals() and serial_connection and serial_connection.is_open):
         log_message("Error: No active serial connection.")
         return
 
@@ -116,55 +121,79 @@ def clear_log():
 root = tk.Tk()
 root.title("ESP32 Controller")
 
-# Serial Port Selection
-port_label = tk.Label(root, text="Port:")
-port_label.grid(row=0, column=0, padx=5, pady=5)
-port_combo = ttk.Combobox(root, values=list_serial_ports(), state="readonly")
-port_combo.grid(row=0, column=1, padx=5, pady=5)
+# Center the GUI
+root.grid_columnconfigure(0, weight=1)
+root.grid_rowconfigure(0, weight=1)
 
-# Baud Rate Selection
-baud_rate_label = tk.Label(root, text="Baud Rate:")
-baud_rate_label.grid(row=1, column=0, padx=5, pady=5)
-baud_rate_combo = ttk.Combobox(root, values=[9600, 115200], state="readonly")
-baud_rate_combo.grid(row=1, column=1, padx=5, pady=5)
+main_frame = tk.Frame(root, padx=10, pady=10)
+main_frame.grid(row=0, column=0, sticky="nsew")
+main_frame.grid_columnconfigure(0, weight=1)
 
-# Connect/Disconnect Button with Sleep, No Sleep, LED Toggle, and MQTT Toggle
-connection_button = tk.Button(root, text="Connect", command=toggle_connection)
-connection_button.grid(row=2, column=0, padx=5, pady=5)
-sleep_button = tk.Button(root, text="Sleep", command=sleep_device)
-sleep_button.grid(row=2, column=1, padx=5, pady=5)
-no_sleep_button = tk.Button(root, text="Disable Sleep", command=toggle_sleep_mode)
-no_sleep_button.grid(row=2, column=2, padx=5, pady=5)
-led_button = tk.Button(root, text="Turn LED On", command=toggle_led)
-led_button.grid(row=2, column=3, padx=5, pady=5)
-mqtt_button = tk.Button(root, text="Enable MQTT", command=toggle_mqtt)
-mqtt_button.grid(row=2, column=4, padx=5, pady=5)
+# Frame for Serial Settings
+serial_frame = tk.LabelFrame(main_frame, text="Serial Settings", padx=10, pady=10)
+serial_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+serial_frame.grid_columnconfigure(1, weight=1)
 
-# Volume Slider
-volume_label = tk.Label(root, text="Volume:")
-volume_label.grid(row=3, column=0, padx=5, pady=5)
-volume_slider = tk.Scale(root, from_=0, to=100, orient=tk.HORIZONTAL, command=set_volume)
-volume_slider.grid(row=3, column=1, columnspan=3, padx=5, pady=5)
+port_label = tk.Label(serial_frame, text="Port:")
+port_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+port_combo = ttk.Combobox(serial_frame, values=list_serial_ports(), state="readonly")
+port_combo.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+refresh_button = tk.Button(serial_frame, text="⟳", command=refresh_ports, width=3)
+refresh_button.grid(row=0, column=2, padx=5, pady=5)
 
-# Sleep Time Entry
-sleep_time_label = tk.Label(root, text="Sleep Time (s):")
-sleep_time_label.grid(row=4, column=0, padx=5, pady=5)
-sleep_time_entry = tk.Entry(root, width=10)
-sleep_time_entry.grid(row=4, column=1, padx=5, pady=5)
-sleep_time_button = tk.Button(root, text="Set Sleep Time", command=set_sleep_time)
-sleep_time_button.grid(row=4, column=2, columnspan=2, padx=5, pady=5)
+baud_rate_label = tk.Label(serial_frame, text="Baud Rate:")
+baud_rate_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+baud_rate_combo = ttk.Combobox(serial_frame, values=[9600, 115200], state="readonly")
+baud_rate_combo.grid(row=1, column=1, padx=5, pady=5, columnspan=2, sticky="ew")
 
-# Log Text Box
-log_label = tk.Label(root, text="Log:")
-log_label.grid(row=5, column=0, padx=5, pady=5)
-log_text = tk.Text(root, height=10, width=50, state="normal")
-log_text.grid(row=6, column=0, columnspan=4, padx=5, pady=5)
+connection_button = tk.Button(serial_frame, text="Connect", command=toggle_connection)
+connection_button.grid(row=2, column=0, columnspan=3, pady=10, sticky="ew")
 
-# Clear Log Button
-clear_log_button = tk.Button(root, text="Clear Log", command=clear_log)
-clear_log_button.grid(row=7, column=0, columnspan=4, padx=5, pady=5)
+# Frame for Commands
+command_frame = tk.LabelFrame(main_frame, text="Commands", padx=10, pady=10)
+command_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+command_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
-# Initialize Serial Connection
-serial_connection = None
+sleep_button = tk.Button(command_frame, text="Sleep", command=sleep_device)
+sleep_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+no_sleep_button = tk.Button(command_frame, text="Disable Sleep", command=toggle_sleep_mode)
+no_sleep_button.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+led_button = tk.Button(command_frame, text="Turn LED On", command=toggle_led)
+led_button.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
+mqtt_button = tk.Button(command_frame, text="Enable MQTT", command=toggle_mqtt)
+mqtt_button.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
+
+# Frame for Volume Control
+volume_frame = tk.LabelFrame(main_frame, text="Volume Control", padx=10, pady=10)
+volume_frame.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+volume_frame.grid_columnconfigure(1, weight=1)
+
+volume_label = tk.Label(volume_frame, text="Volume:")
+volume_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+volume_slider = tk.Scale(volume_frame, from_=0, to=100, orient=tk.HORIZONTAL, command=set_volume)
+volume_slider.grid(row=0, column=1, padx=5, pady=5, columnspan=3, sticky="ew")
+
+# Frame for Sleep Time
+sleep_time_frame = tk.LabelFrame(main_frame, text="Sleep Time", padx=10, pady=10)
+sleep_time_frame.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+sleep_time_frame.grid_columnconfigure(1, weight=1)
+
+sleep_time_label = tk.Label(sleep_time_frame, text="Sleep Time (s):")
+sleep_time_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+sleep_time_entry = tk.Entry(sleep_time_frame, width=10)
+sleep_time_entry.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+sleep_time_button = tk.Button(sleep_time_frame, text="Set Sleep Time", command=set_sleep_time)
+sleep_time_button.grid(row=0, column=2, padx=5, pady=5, columnspan=2, sticky="ew")
+
+# Frame for Log
+log_frame = tk.LabelFrame(root, text="Log", padx=10, pady=10)
+log_frame.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+
+log_text = tk.Text(log_frame, height=10, width=50, state="normal")
+
+log_text.grid(row=0, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
+
+clear_log_button = tk.Button(log_frame, text="Clear Log", command=clear_log)
+clear_log_button.grid(row=1, column=0, columnspan=3, pady=5, sticky="ew")
 
 root.mainloop()

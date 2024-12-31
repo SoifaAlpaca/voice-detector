@@ -1,0 +1,60 @@
+
+- alias: 'Send Volume'
+  trigger:
+    - platform: state
+      entity_id: input_number.esp_volume
+  action:
+    - service: mqtt.publish
+      data:
+        topic: ems/t1/g1/volume/set
+        payload: "{{ states('input_number.esp_volume') | int }}"
+        qos: 0
+        retain: false
+      target: {}
+
+- alias: 'Validate MQTT Input'
+  trigger:
+    - platform: state
+      entity_id: input_text.mqtt_value_input
+  action:
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: >
+              {{ states('input_text.mqtt_value_input').isdigit() and states('input_text.mqtt_value_input')|int > 0 }}
+        sequence:
+          - service: mqtt.publish
+            data:
+              topic: ems/t1/g1/timesleep/set
+              payload: "{{ states('input_text.mqtt_value_input') }}"
+              qos: 0
+              retain: false
+            target: {}
+      - conditions: []
+        sequence:
+          - service: notify.persistent_notification
+            data:
+              message: "Invalid input! Please enter a positive integer."
+
+- alias: "LED On"
+  trigger:
+  - platform: state
+    entity_id: input_boolean.led_mode
+    to: "on"
+  action:
+  - service: mqtt.publish
+    data:
+      topic: ems/t1/g1/enableled/set
+      payload: "1"
+    target: {}
+- alias: "LED Off"
+  trigger:
+  - platform: state
+    entity_id: input_boolean.led_mode
+    to: "off"
+  action:
+  - service: mqtt.publish
+    data:
+      topic: ems/t1/g1/enableled/set
+      payload: "0"
+    target: {}

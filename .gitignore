@@ -13,3 +13,5 @@ python/__pycache__
 ltspice/*
 !ltspice/*.asc
 !ltspice/*.txt
+
+report/_minted-main

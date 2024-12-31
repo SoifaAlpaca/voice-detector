@@ -21,10 +21,10 @@
     \pagestyle{fancy}
     \fancyhf{}
     \fancyhead[L]{
-        \includegraphics[scale = 0.03]{Images/NovaFctHor.png}
+        \includegraphics[scale = 0.45]{Images/NovaFctHor.png}
     } % Left of Head note
-    \fancyhead[R]{\footnotesize Cadeira} % Right of Head note
-    \fancyfoot[L]{\footnotesize LEEC} % Left of Footnote
+    \fancyhead[R]{\footnotesize Electronics for Micro-Systems} % Right of Head note
+    \fancyfoot[L]{\footnotesize MEEC/MIEEC} % Left of Footnote
     \fancyfoot[R]{\thepage  } % Center of Footnote
     %\fancyfoot[R]{\footnotesize Degree} % Right of Footnote
     \renewcommand{\footrulewidth}{0.4pt} % Footnote rule
@@ -46,6 +46,10 @@
 
 % Code highlighting
 \usepackage{listings}
+
+\usepackage{minted}
+\usepackage{xcolor}
+
 \lstset{ 
     backgroundcolor=\color{cellbackground}, % background color for the code block
     basicstyle=\ttfamily,                   % font style
@@ -122,11 +126,11 @@
 \begin{center}
     \begin{figure}
         \vspace{-1.0cm}
-        \includegraphics[scale = 1, left]{Images/NovaFctHor.png} % Nova logo
+        \includegraphics[scale = 0.06, left]{Images/NovaFctVer.png} % Nova logo
     \end{figure}
 
     \mbox{}\\[2.0cm]
-    \textsc{\Huge MEEC/MIEEC}\\[2.5cm]
+    \textsc{\Huge MEEC/MIEEC}\\[2cm]
     \textsc{\LARGE Electronics for Micro-Systems}\\[2.0cm]
     \HRule\\[0.4cm]
     {\large \bf {Project \linebreak Voice Activity Detector}}\\[0.2cm] % [\texttt{EN}]
@@ -159,7 +163,7 @@
 %    \large $\boxed{\text{\bf Group} \ \clubsuit}$\\[4.0cm]
 %\end{flushleft}
 
-\vspace{6cm}
+\vspace{4cm}
 
 \begin{center}
     \large \bf 2024/2025 -- \nth{1} Semester - DEEC
@@ -178,6 +182,8 @@
 \newpage
 
 \listoffigures
+
+\listoftables
 
 \newpage
 

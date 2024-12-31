@@ -2,7 +2,7 @@
 #define MQTT_H
 
 #define LOG_MESSAGE_MQTT 1
-#define GRAFANA          0 //whether or not is using grafana or Home Assistant 
+#define GRAFANA          1 //whether or not is using grafana or Home Assistant 
 
 #if GRAFANA
     extern char* status_idle;

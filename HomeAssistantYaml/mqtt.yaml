@@ -1,0 +1,10 @@
+    - sensor:
+        - name: "Status"
+          state_topic: "ems/g1/t1/status"
+    - sensor:
+        - name: "Volume"
+          state_topic: "ems/t1/g1/volume/state"
+    - sensor:
+        - name: "Idle LED"
+          state_topic: "ems/t1/g1/enableled/state"
+          

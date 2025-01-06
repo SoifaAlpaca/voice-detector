@@ -1,0 +1,114 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <driver/i2s.h>
+#include <esp_task_wdt.h>
+#include "I2SMicSampler.h"
+#include "I2SOutput.h"
+#include "config.h"
+#include "Listen.h"
+#include "SPIFFS.h"
+#include "IntentProcessor.h"
+#include "Speaker.h"
+#include "IndicatorLight.h"
+#include "MQTT.h"
+
+// i2s config for reading from both channels of I2S
+i2s_config_t i2sMemsConfigBothChannels = {
+    .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX),
+    .sample_rate = 16000,
+    .bits_per_sample = I2S_BITS_PER_SAMPLE_32BIT,
+    .channel_format = I2S_MIC_CHANNEL,
+    .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_STAND_I2S),
+    .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
+    .dma_buf_count = 4,
+    .dma_buf_len = 64,
+    .use_apll = false,
+    .tx_desc_auto_clear = false,
+    .fixed_mclk = 0};
+
+// i2s microphone pins
+i2s_pin_config_t i2s_mic_pins = {
+    .bck_io_num = I2S_MIC_SERIAL_CLOCK,
+    .ws_io_num = I2S_MIC_LEFT_RIGHT_CLOCK,
+    .data_out_num = I2S_PIN_NO_CHANGE,
+    .data_in_num = I2S_MIC_SERIAL_DATA};
+
+// i2s speaker pins
+i2s_pin_config_t i2s_speaker_pins = {
+    .bck_io_num = I2S_SPEAKER_SERIAL_CLOCK,
+    .ws_io_num = I2S_SPEAKER_LEFT_RIGHT_CLOCK,
+    .data_out_num = I2S_SPEAKER_SERIAL_DATA,
+    .data_in_num = I2S_PIN_NO_CHANGE};
+
+// This task does all the heavy lifting for our application
+void listenTask(void *param)
+{
+  Listen *listen = static_cast<Listen *>(param);
+
+  const TickType_t xMaxBlockTime = pdMS_TO_TICKS(100);
+  while (true)
+  {
+    // wait for some audio samples to arrive
+    uint32_t ulNotificationValue = ulTaskNotifyTake(pdTRUE, xMaxBlockTime);
+    if (ulNotificationValue > 0)
+    {
+      listen->run();
+    }
+  }
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(1000);
+  Serial.println("Starting up");
+  // start up wifi
+  // launch WiFi
+  if (!WiFi.isConnected())
+  {
+    init_wifi();
+  }
+  if (WiFi.waitForConnectResult() != WL_CONNECTED)
+  {
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
+  }
+  Serial.printf("Total heap: %d\n", ESP.getHeapSize());
+  Serial.printf("Free heap: %d\n", ESP.getFreeHeap());
+
+  // startup SPIFFS for the wav files
+  SPIFFS.begin();
+  // make sure we don't get killed for our long running tasks
+  esp_task_wdt_init(10, false);
+
+  // start up the I2S input (from either an I2S microphone or Analogue microphone via the ADC)
+  // Direct i2s input from INMP441 or the SPH0645
+  I2SSampler *i2s_sampler = new I2SMicSampler(i2s_mic_pins);
+
+  // start the i2s speaker output
+  I2SOutput *i2s_output = new I2SOutput();
+  i2s_output->start(I2S_NUM_1, i2s_speaker_pins);
+  Speaker *speaker = new Speaker(i2s_output);
+
+  // indicator light to show when we are listening
+  IndicatorLight *indicator_light = new IndicatorLight();
+
+  // and the intent processor
+  IntentProcessor *intent_processor = new IntentProcessor(speaker);
+
+  // create our application
+  Listen *listen = new Listen(i2s_sampler, intent_processor, speaker, indicator_light);
+
+  // set up the i2s sample writer task
+  TaskHandle_t listenTaskHandle;
+  xTaskCreate(listenTask, "Application Task", 8192, listen, 1, &listenTaskHandle);
+
+  // start sampling from i2s device - use I2S_NUM_0 as that's the one that supports the internal ADC
+  i2s_sampler->start(I2S_NUM_0, i2sMemsConfigBothChannels, listenTaskHandle);
+}
+
+void loop()
+{
+  vTaskDelay(1000);
+}

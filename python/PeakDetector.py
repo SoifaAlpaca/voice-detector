@@ -8,7 +8,7 @@ from Funcs import *
 VoltPerdB = lambda x : (10**((x-42)/20) * 20e-6/sqrt(2) )* 1000   #miliVolt
 
 print(VoltPerdB(60).evalf())
-print(VoltPerdB(65).evalf())
+print(VoltPerdB(70).evalf())
 
 val_arr   = np.arange(10,100,0.5)
 

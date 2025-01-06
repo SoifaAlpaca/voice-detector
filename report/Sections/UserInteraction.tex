@@ -101,7 +101,7 @@ The final dashboard with real data sent by the Esp32 can be seen in Figure \ref{
 
 \subsubsection{Home Assistant}
 
-Home Assistant is an open-source home automation platform designed to provide centralized control and monitoring of smart devices within a connected environment. This tool allows advanced automations and integrations between different IoT systems and highly customizable dashboards.
+Home Assistant is an open-source home automation platform designed to provide centralized control and monitoring of smart devices within a connected environment. This tool allows advanced automations and integrations between different IoT systems and highly customizable dashboards. This means that in the future with other IoT devices, that are not necessarily made to be used together, can be integrated. 
 
 Two important concepts for Home Assistant are sensors and automations. In Home Assistant, sensors are entities that provide data about the environment or the state of connected devices, this is the data acquisition aspect. Automations, in this context, enable actions to be triggered automatically based on specific conditions, events, schedules or sensor state.
 
@@ -120,10 +120,10 @@ The dashboard shown in Figure \ref{fig:HADashboard} is more intuitive and allows
 
 Since this was not part of the labwork requirements, the Home Assistant implementation will be explain in greater detail. 
 
-In the Home Assistant ecosystem most of the dashboard's cards can be build and customized through the graphical interface th more complex configurations need to be through the yaml configuration files. 
+In the Home Assistant ecosystem most of the dashboard's cards can be build and customized through the graphical interface the more complex configurations is through the yaml configuration files. 
 
-There is only one yaml file that needed to be edited for this project, the configuration.yaml, but in order to make the code easier to read two other files were edited and or created. 
-% 
+There is only one yaml file that needs to be edited for this project, the configuration.yaml, but in order to make the code easier to read two other files were edited and or created. 
+
 \begin{minted}[frame=lines,fontsize=\small]{yaml}
 automation: !include automations.yaml
 mqtt: !include mqtt.yaml
@@ -163,7 +163,7 @@ The previous code shows the configuration.yaml, it first includes the two other 
           state_topic: "ems/t1/g1/enableled/state"
 \end{minted}
 
-The mqtt.yaml file creates three sensors, this way Home Assistant is able to receive data from the MCU.
+The mqtt.yaml file creates three sensors, this way Home Assistant is able to receive data from the MCU and use it as sensor.
 
 
 \begin{minted}[frame=lines,fontsize=\small]{yaml}
@@ -229,9 +229,9 @@ The mqtt.yaml file creates three sensors, this way Home Assistant is able to rec
 
 \end{minted}
 
-The automation.yaml is the more complex file, the first alias detects changes in the volume bar and send a MQTT message to the MCU. The second detects if the input in the text box is a number if it is sends the MQTT message, if not sends a notification saying "Invalid input! Please enter a positive integer.". The rest of the file will ensure the correct value of the LED boolean and according to that boolean will send a MQTT message to turn the activity LED off or on.
+The automation.yaml is the more complex file, the first alias detects changes in the volume bar and send a MQTT message to the MCU. The second detects if the input in the text box is a number if it is sends the MQTT message, if not sends a notification saying "Invalid input! Please enter a positive integer.". The rest of the file will ensure the correct value of the LED boolean and according to that boolean will send a MQTT message to turn the activity LED on or off.
 
-As a last example of how integrations can be made, the sleep is a basic button created through the GUI, it's configurations can be viewed in Figure \ref{fig:SleepCard}.
+As a last example of how integrations can be made, the sleep button is a basic button created through the GUI, it's configurations can be viewed in Figure \ref{fig:SleepCard}.
 
 \begin{figure}[H]
     \centering
@@ -244,5 +244,25 @@ As a last example of how integrations can be made, the sleep is a basic button c
 
 The GUI was developed to serve as a user-friendly interface for interacting with the system over the wired connection. A wired connection is important to ensure a reliable with low latency and direct interaction to the VAD system. This way the system is still usable when there is no internet connection. The wired communication was all performed through serial communication.
 
-\subsubsection{Grafical User Interface (GUI) }
+\subsubsection{Graphical User Interface (GUI) }
 
+This GUI provides a user-friendly and interactive platform for controlling and configuring the system. To ensure cross-platform compatibility and ease of development, the GUI was implemented using Python. The interface was designed with a focus on clarity, responsiveness, and functionality.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.3]{Images/GUI.png}
+    \caption{Graphical User Interface.}
+    \label{fig:GUI}
+\end{figure}
+
+As seen in Figure \ref{fig:GUI}, the GUI is divided in five sections.
+
+Serial settings, here the user is able to select the communication port, this allows the use of multiple MCU's and to disconnect and reconnect in another port, which is useful for debugging.
+
+Commands, this section contains four buttons that send a non numeric command, according to Table \ref{tab:mcuOptions}.
+
+Volume Control, a simple volume slider that sends its value when changed.
+
+Sleep Time, a text box that test if the input is valid before sending.
+
+Log, is just a text box that shows information about the system, such as errors in communication.

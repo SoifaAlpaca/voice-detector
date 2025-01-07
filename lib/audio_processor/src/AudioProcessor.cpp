@@ -44,6 +44,7 @@ void AudioProcessor::get_spectrogram_segment(float *output)
 {
     // apply the hamming window to the samples
     m_hamming_window->applyWindow(m_fft_input);
+    //TODO Filtro depois da FFT
     // do the fft
     kiss_fftr(
         m_cfg,

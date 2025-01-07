@@ -2,6 +2,10 @@
 #define _CONFIG_H
 
 #include <Arduino.h>
+#include <driver/i2s.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
+
 
 // I2S Microphone Settings
 #define USE_I2S_MIC_INPUT
@@ -16,6 +20,13 @@
 #define I2S_SPEAKER_SERIAL_CLOCK GPIO_NUM_19
 #define I2S_SPEAKER_LEFT_RIGHT_CLOCK GPIO_NUM_27
 #define I2S_SPEAKER_SERIAL_DATA GPIO_NUM_18
+
+extern i2s_config_t i2sMemsConfigBothChannels;
+extern i2s_pin_config_t i2s_mic_pins;
+extern i2s_pin_config_t i2s_speaker_pins;
+
+extern WiFiClient espClient;
+extern PubSubClient client;
 
 #define WAKEUP_PIN GPIO_NUM_33
 #define PIN_LED 32

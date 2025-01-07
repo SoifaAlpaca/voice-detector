@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include "driver/i2s.h"
 
+extern bool playing;
+
 class SampleSource;
 
 /**

@@ -7,7 +7,7 @@
 #include "Speaker.h"
 #include "IntentProcessor.h"
 #include "WitAiChunkedUploader.h"
-#include "include/../Creds.h"
+#include "Creds.h"
 #include <string.h>
 
 #define WINDOW_SIZE 320

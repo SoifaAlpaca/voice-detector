@@ -6,6 +6,8 @@
 #include "Speaker.h"
 #include "IntentProcessor.h"
 
+bool listening = true;
+
 Listen::Listen(I2SSampler *sample_provider, IntentProcessor *intent_processor, Speaker *speaker, IndicatorLight *indicator_light)
 {
     // detect wake word state - waits for the wake word to be detected
@@ -21,16 +23,19 @@ Listen::Listen(I2SSampler *sample_provider, IntentProcessor *intent_processor, S
 void Listen::run()
 {
     bool state_done = m_current_state->run();
+
     if (state_done)
     {
         m_current_state->exitState();
         // switch to the next state - very simple state machine so we just go to the other state...
-        if (m_current_state == m_detect_wake_word_state)
-        {
+        if (m_current_state == m_detect_wake_word_state){
+
+            listening = true;
             m_current_state = m_recognise_command_state;
         }
-        else
-        {
+        else{
+            
+            listening = false;
             m_current_state = m_detect_wake_word_state;
         }
         m_current_state->enterState();

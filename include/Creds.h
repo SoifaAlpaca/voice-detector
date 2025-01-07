@@ -10,6 +10,6 @@ extern const char *mqtt_server;
 extern const unsigned int mqttPort;
 
 // command recognition settings
-#define COMMAND_RECOGNITION_ACCESS_KEY "VBVCXZ2NCCSMLQT6DZE6ZGGSHP5ZUKYH"
+#define COMMAND_RECOGNITION_ACCESS_KEY "WKLQFIKHZRX5UBGG65ANBIL6Q6TEGH4S"
 
 #endif

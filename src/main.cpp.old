@@ -1,3 +1,4 @@
+/*
 #include <Arduino.h>
 #include <WiFi.h>
 #include <driver/i2s.h>
@@ -112,3 +113,4 @@ void loop()
 {
   vTaskDelay(1000);
 }
+*/

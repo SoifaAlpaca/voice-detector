@@ -8,6 +8,7 @@
 #include "SampleSource.h"
 #include "I2SOutput.h"
 
+bool playing   = false;
 // number of frames to try and send at once (a frame is a left and right sample)
 #define NUM_FRAMES_TO_SEND 128
 
@@ -33,6 +34,7 @@ void i2sWriterTask(void *param)
                         // get some frames from the wave file - a frame consists of a 16 bit left and right sample
                         if (output->m_sample_generator && output->m_sample_generator->available())
                         {
+                            playing = true;
                             int frames_available = output->m_sample_generator->getFrames(frames, NUM_FRAMES_TO_SEND);
                             // how maby bytes do we now have to send
                             availableBytes = frames_available * sizeof(uint32_t);
@@ -40,6 +42,7 @@ void i2sWriterTask(void *param)
                         else
                         {
                             // no sample generator available - just send silence
+                            playing = false;
                             for (int i = 0; i < NUM_FRAMES_TO_SEND; i++)
                             {
                                 frames[i].left = frames[i].right = 0;
@@ -59,6 +62,7 @@ void i2sWriterTask(void *param)
                         buffer_position += bytesWritten;
                     }
                 } while (bytesWritten > 0);
+                playing = false;
             }
         }
     }

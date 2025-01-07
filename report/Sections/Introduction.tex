@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The Voice Activity Detector (VAD) project focuses on the design, implementation, and testing of a mixed-mode embedded system capable of detecting and processing voice activity
+The Voice Activity Detector (VAD) project focuses on the design, implementation, and testing of a mixed-mode embedded system capable of detecting and processing voice activity. The primary objective is to create an energy-efficient system that transitions from idle to active states upon detecting human voice frequencies. This project integrates both analog and digital signal processing techniques, along with IoT components, to provide a comprehensive solution for voice-activated control.
 
 \begin{figure}[H]
     \centering
@@ -8,3 +8,9 @@ The Voice Activity Detector (VAD) project focuses on the design, implementation,
     \caption{Voice Activity Detector Block Diagram \textsuperscript{\cite{Lab-statement}} .}
     \label{fig:VADBlockDiagram}
 \end{figure}
+
+Figure \ref{fig:VADBlockDiagram} shows a simplified block diagram of the proposed system with two major components, the analog front end (AFE) and the digital component.
+
+The AFE block is responsible for detecting audio peaks in the human voice frequency range in order to wake the MCU from deep sleep. This block will need an amplifier, a band-pass filter a peak detector and a comparator. 
+
+The digital component, as to wake up to the AFE wake up signal, detect key words, play music according to the keywords and handle the user interaction with the system. In addition to the real time interaction with the system there will be an IoT component, first with Grafana in order to visualize data and finally to enhance system capability integration with Home Assistant was developed.

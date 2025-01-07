@@ -1,7 +1,6 @@
 #include "interaction.h"
 
-//TODO tirar creds
-#include "Creds.h"
+#include "config.h"
 #include "RTOSTask.h"
 
 String com_sleep        = "SLEEP";

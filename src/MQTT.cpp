@@ -1,6 +1,7 @@
 
 #include "MQTT.h"
 #include "Creds.h"
+#include "config.h"
 #include <WiFi.h>
 #include <PubSubClient.h>
 

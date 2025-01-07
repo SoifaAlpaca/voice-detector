@@ -1,3 +1,7 @@
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+#include <Arduino.h>
 
 // I2S Microphone Settings
 #define USE_I2S_MIC_INPUT
@@ -12,3 +16,16 @@
 #define I2S_SPEAKER_SERIAL_CLOCK GPIO_NUM_19
 #define I2S_SPEAKER_LEFT_RIGHT_CLOCK GPIO_NUM_27
 #define I2S_SPEAKER_SERIAL_DATA GPIO_NUM_18
+
+#define WAKEUP_PIN GPIO_NUM_33
+#define PIN_LED 32
+#define TIME_MAX (2 * 60 * 1000)
+
+extern bool no_mqtt; // Declare with extern
+extern bool no_sleep;
+
+extern RTC_DATA_ATTR unsigned int sleep_time;
+extern RTC_DATA_ATTR float volume;
+extern RTC_DATA_ATTR uint8_t led_status;
+
+#endif

@@ -5,6 +5,7 @@
 
 
 extern SemaphoreHandle_t sem_sleep;
+extern SemaphoreHandle_t sem_stop_playing; 
 
 extern TimerHandle_t timer_sleep;
 extern TaskHandle_t  handle_main;

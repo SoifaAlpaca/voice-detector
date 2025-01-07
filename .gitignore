@@ -8,6 +8,7 @@ report/main.*
 !report/main.tex
 
 src/Creds.cpp
+include/Creds.h
 
 python/__pycache__
 ltspice/*

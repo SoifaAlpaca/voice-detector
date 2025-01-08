@@ -1,0 +1,62 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{alias}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Send}\PYG{n+nv}{ }\PYG{l+s}{Volume}\PYG{l+s}{\PYGZsq{}}
+\PYG{+w}{  }\PYG{n+nt}{trigger}\PYG{p}{:}
+\PYG{+w}{    }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{platform}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{state}
+\PYG{+w}{      }\PYG{n+nt}{entity\PYGZus{}id}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{input\PYGZus{}number.esp\PYGZus{}volume}
+\PYG{+w}{  }\PYG{n+nt}{action}\PYG{p}{:}
+\PYG{+w}{    }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{service}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mqtt.publish}
+\PYG{+w}{      }\PYG{n+nt}{data}\PYG{p}{:}
+\PYG{+w}{        }\PYG{n+nt}{topic}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{ems/t1/g1/volume/set}
+\PYG{+w}{        }\PYG{n+nt}{payload}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZob{}\PYGZob{}}\PYG{n+nv}{ }\PYG{l+s}{states(\PYGZsq{}input\PYGZus{}number.esp\PYGZus{}volume\PYGZsq{})}\PYG{n+nv}{ }\PYG{l+s}{|}\PYG{n+nv}{ }\PYG{l+s}{int}\PYG{n+nv}{ }\PYG{l+s}{\PYGZcb{}\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{        }\PYG{n+nt}{qos}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{0}
+\PYG{+w}{        }\PYG{n+nt}{retain}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{false}
+\PYG{+w}{      }\PYG{n+nt}{target}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{\PYGZob{}}\PYG{p+pIndicator}{\PYGZcb{}}
+
+\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{alias}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Validate}\PYG{n+nv}{ }\PYG{l+s}{MQTT}\PYG{n+nv}{ }\PYG{l+s}{Input}\PYG{l+s}{\PYGZsq{}}
+\PYG{+w}{  }\PYG{n+nt}{trigger}\PYG{p}{:}
+\PYG{+w}{    }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{platform}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{state}
+\PYG{+w}{      }\PYG{n+nt}{entity\PYGZus{}id}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{input\PYGZus{}text.mqtt\PYGZus{}value\PYGZus{}input}
+\PYG{+w}{  }\PYG{n+nt}{action}\PYG{p}{:}
+\PYG{+w}{    }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{choose}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{conditions}\PYG{p}{:}
+\PYG{+w}{        }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{condition}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{template}
+\PYG{+w}{          }\PYG{n+nt}{value\PYGZus{}template}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{\PYGZgt{}}
+\PYG{+w}{              }\PYG{n+no}{\PYGZob{}\PYGZob{} states(\PYGZsq{}input\PYGZus{}text.mqtt\PYGZus{}value\PYGZus{}input\PYGZsq{}).isdigit() and states(\PYGZsq{}input\PYGZus{}text.mqtt\PYGZus{}value\PYGZus{}input\PYGZsq{})|int \PYGZgt{} 0 \PYGZcb{}\PYGZcb{}}
+\PYG{+w}{        }\PYG{n+nt}{sequence}\PYG{p}{:}
+\PYG{+w}{          }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{service}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mqtt.publish}
+\PYG{+w}{            }\PYG{n+nt}{data}\PYG{p}{:}
+\PYG{+w}{              }\PYG{n+nt}{topic}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{ems/t1/g1/timesleep/set}
+\PYG{+w}{              }\PYG{n+nt}{payload}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZob{}\PYGZob{}}\PYG{n+nv}{ }\PYG{l+s}{states(\PYGZsq{}input\PYGZus{}text.mqtt\PYGZus{}value\PYGZus{}input\PYGZsq{})}\PYG{n+nv}{ }\PYG{l+s}{\PYGZcb{}\PYGZcb{}}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{              }\PYG{n+nt}{qos}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{0}
+\PYG{+w}{              }\PYG{n+nt}{retain}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{false}
+\PYG{+w}{            }\PYG{n+nt}{target}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{\PYGZob{}}\PYG{p+pIndicator}{\PYGZcb{}}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{conditions}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{[}\PYG{p+pIndicator}{]}
+\PYG{+w}{        }\PYG{n+nt}{sequence}\PYG{p}{:}
+\PYG{+w}{          }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{service}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{notify.persistent\PYGZus{}notification}
+\PYG{+w}{            }\PYG{n+nt}{data}\PYG{p}{:}
+\PYG{+w}{              }\PYG{n+nt}{message}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Invalid}\PYG{n+nv}{ }\PYG{l+s}{input!}\PYG{n+nv}{ }\PYG{l+s}{Please}\PYG{n+nv}{ }\PYG{l+s}{enter}\PYG{n+nv}{ }\PYG{l+s}{a}\PYG{n+nv}{ }\PYG{l+s}{positive}\PYG{n+nv}{ }\PYG{l+s}{integer.}\PYG{l+s}{\PYGZdq{}}
+
+\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{alias}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{LED}\PYG{n+nv}{ }\PYG{l+s}{On}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{  }\PYG{n+nt}{trigger}\PYG{p}{:}
+\PYG{+w}{  }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{platform}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{state}
+\PYG{+w}{    }\PYG{n+nt}{entity\PYGZus{}id}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{input\PYGZus{}boolean.led\PYGZus{}mode}
+\PYG{+w}{    }\PYG{n+nt}{to}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{on}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{  }\PYG{n+nt}{action}\PYG{p}{:}
+\PYG{+w}{  }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{service}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mqtt.publish}
+\PYG{+w}{    }\PYG{n+nt}{data}\PYG{p}{:}
+\PYG{+w}{      }\PYG{n+nt}{topic}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{ems/t1/g1/enableled/set}
+\PYG{+w}{      }\PYG{n+nt}{payload}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{1}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nt}{target}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{\PYGZob{}}\PYG{p+pIndicator}{\PYGZcb{}}
+\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{alias}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{LED}\PYG{n+nv}{ }\PYG{l+s}{Off}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{  }\PYG{n+nt}{trigger}\PYG{p}{:}
+\PYG{+w}{  }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{platform}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{state}
+\PYG{+w}{    }\PYG{n+nt}{entity\PYGZus{}id}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{input\PYGZus{}boolean.led\PYGZus{}mode}
+\PYG{+w}{    }\PYG{n+nt}{to}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{off}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{  }\PYG{n+nt}{action}\PYG{p}{:}
+\PYG{+w}{  }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nt}{service}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mqtt.publish}
+\PYG{+w}{    }\PYG{n+nt}{data}\PYG{p}{:}
+\PYG{+w}{      }\PYG{n+nt}{topic}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{ems/t1/g1/enableled/set}
+\PYG{+w}{      }\PYG{n+nt}{payload}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{0}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nt}{target}\PYG{p}{:}\PYG{+w}{ }\PYG{p+pIndicator}{\PYGZob{}}\PYG{p+pIndicator}{\PYGZcb{}}
+
+\end{MintedVerbatim}

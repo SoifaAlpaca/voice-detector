@@ -9,6 +9,7 @@ In this section, the complete Analog Front End circuit will be presented. This i
     \label{fig:CompleteAFE}
 \end{figure}
 
+Throughout this project, the LM324 Operation Amplifier was used, because it can be powered by $9V$, unlike the MCP6001, and because of its low power consumption and low output noise\textsuperscript{\cite{lm324-datasheet}}. The only downside of this OpAmp is the fact that it is not rail-to-rail, but this fact will not be a problem, since the signals that will be used will have low amplitudes. In addiction to that, the E12 series for resistors and capacitors was also used. 
 \subsection{Pre-Amp}
 
 \subsubsection{Design}
@@ -299,7 +300,7 @@ The Peak Detector circuit consists of a simple Half Bridge Rectifier with a resi
     \label{fig:PeakandComp}
 \end{figure}
 
-The final output voltage value also goes through a voltage divider, to avoid surpassing the maximum voltage value for the GPIO pins of the MCU used, in the case of the ESP 32, $3,3V$\textsuperscript{\cite{ESP32-datasheet}}. The simulation of this circuit with a sine wave generated with a small delay is shown in Figure \ref{fig:SimPeakandComp}.
+The final output voltage value also goes through a voltage divider, to avoid surpassing the maximum voltage value for the GPIO pins of the MCU used, in the case of the ESP32, $3,3V$\textsuperscript{\cite{ESP32-datasheet}}. The simulation of this circuit with a sine wave generated with a small delay is shown in Figure \ref{fig:SimPeakandComp}.
 
 \begin{figure}[H]
     \centering

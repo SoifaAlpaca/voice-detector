@@ -9,7 +9,9 @@ This section presents the implementation of the system, including the hardware a
     \label{fig:systemImplementation}
 \end{figure}
 
-\subsection{Digital Audio Implementation}
+\subsection{Digital Audio Software}
+
+\subsubsection{Implementation}
 
 To implement in software the digital audio interface, the ESP32 was used, as it has the necessary peripherals to handle the audio data and the WiFi communication. The ESP32 was programmed using the PlatformIO.
 
@@ -54,6 +56,10 @@ The intent processor described in the Command Recognition flowchart is a functio
     \label{fig:intentProcessor}
 \end{figure}
 
+\subsubsection{Testing}
+
+The digital audio interface was tested using the ESP32 and the I2S microphone. The test consisted of saying the wake up word and give all the possible commands implemented. The test was successful, the system was able to recognize the wake up word and perform the action associated with the command. The test was performed with the wake up word marvin and the commands "play music", "stop music" and "tell a joke". 
+
 \subsection{Software integration}
 \label{sec:SoftwareInt}
 Running on the ESP32 microcontroller, the firmware manages the voice activity detection, system control, and communication tasks, with external platforms for data visualization and interaction. A flowchart representing the code running on the MCU can be seen in Figure \ref{fig:firmwareFlowchart}. 
@@ -79,7 +85,3 @@ To address this, audio processing tasks were pinned to Core 1 while WiFi operati
     \caption{Analog Filter Bode.}
     \label{fig:AnalogFilterBodeScoppy}
 \end{figure}
-
-\section{Digital Interface}
-
-\textcolor{red}{\textbf{i2s configuration}}

@@ -54,7 +54,7 @@ A diagram of the DMA buffer transmission is depicted in Figure \ref{fig:DMATrans
 
 \subsection{Audio Input}
 
-The audio input was done with a I2S MEMS (Micro-Electro-Mechanical System) breakout board (INMP441) that sends the audio signal in I2S format. The I2S format is a serial protocol that is used to transmit audio data and has three lines: the bit clock (BCLK), the word select (WS), and the data line (DIN). 
+The audio input was done with a I2S MEMS (Micro-Electro-Mechanical System) breakout board (INMP441)\textsuperscript{\cite{INMP441-datasheet}} that sends the audio signal in I2S format. The I2S format is a serial protocol that is used to transmit audio data and has three lines: the bit clock (BCLK), the word select (WS), and the data line (DIN). 
 \begin{itemize}
     \item BCLK: The bit clock is the serial clock that is used to synchronize the data transmission from a peripheral.
     \item WS: The word select line indicates if the data is sent or received from left or right channels.
@@ -76,7 +76,7 @@ To configure the communication the I2S MEMS breakout board was set to record aud
 
 \subsection{Audio Output}
 
-The audio output was obtained with a MAX98357A I2S Class D amplifier that receives the audio signal in I2S format and outputs the audio signal to the speaker. The MAX98357A is a low-cost, low-power mono audio amplifier that is suitable for this application and has a built-in DAC and PWM modulator that converts the digital audio signal to an analog audio signal. 
+The audio output was obtained with a MAX98357A \textsuperscript{\cite{MAX98357A-datasheet}} I2S Class D amplifier that receives the audio signal in I2S format and outputs the audio signal to the speaker. The MAX98357A is a low-cost, low-power mono audio amplifier that is suitable for this application and has a built-in DAC and PWM modulator that converts the digital audio signal to an analog audio signal. 
 
 It was configured to receive the audio signal in both channels right and left, 16 bits per sample and a sample rate of \SI{16}{\kilo \hertz} that is suitable for voice reproduction, the two channels were mixed to output the audio signal to the speaker because in this application it was only used one speaker (mono).
 
@@ -137,7 +137,7 @@ This solution has the advantage of being able to detect the presence of a word i
 
 \subsection{Interact with Wit.ai}
 
-The Wit.ai platform allows the development of voice recognition applications that can be used in the project. It has a REST API that allows the application to send audio data to the platform and receive the recognized text. The Wit.ai platform uses machine learning algorithms to recognize the speech and convert it to text. 
+The Wit.ai \textsuperscript{\cite{Wit}} platform allows the development of voice recognition applications that can be used in the project. It has a REST API that allows the application to send audio data to the platform and receive the recognized text. The Wit.ai platform uses machine learning algorithms to recognize the speech and convert it to text. 
 
 To interact with the Wit.ai platform, the application has to send a POST request to the platform with the audio data. The platform will process the audio data and return the recognized text. To avoid having to buffer the entire audio sample in memory a chucked upload of the data was performed.
 

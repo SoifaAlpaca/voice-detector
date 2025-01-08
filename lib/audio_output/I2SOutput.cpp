@@ -8,7 +8,7 @@
 #include "SampleSource.h"
 #include "I2SOutput.h"
 
-bool playing   = false;
+bool playing = false;
 // number of frames to try and send at once (a frame is a left and right sample)
 #define NUM_FRAMES_TO_SEND 128
 
@@ -77,7 +77,7 @@ void I2SOutput::start(i2s_port_t i2sPort, i2s_pin_config_t &i2sPins)
         .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
         .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
         .communication_format = (i2s_comm_format_t)(I2S_COMM_FORMAT_STAND_I2S),
-        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
+        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL2,
         .dma_buf_count = 4,
         .dma_buf_len = 64,
         .use_apll = false,
@@ -92,7 +92,7 @@ void I2SOutput::start(i2s_port_t i2sPort, i2s_pin_config_t &i2sPins)
     i2s_zero_dma_buffer(m_i2sPort);
     // start a task to write samples to the i2s peripheral
     TaskHandle_t writerTaskHandle;
-    xTaskCreate(i2sWriterTask, "i2s Writer Task", 4096, this, 1, &writerTaskHandle);
+    xTaskCreatePinnedToCore(i2sWriterTask, "i2s Writer Task", 4096, this, configMAX_PRIORITIES - 1, &writerTaskHandle, 1);
 }
 
 void I2SOutput::setSampleGenerator(SampleSource *sample_generator)

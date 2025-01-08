@@ -49,7 +49,7 @@ IndicatorLight::IndicatorLight()
     // start off with the light off
     m_state = OFF;
     // set up the task for controlling the light
-    xTaskCreate(indicatorLedTask, "Indicator LED Task", 4096, this, 1, &m_taskHandle);
+    xTaskCreatePinnedToCore(indicatorLedTask, "Indicator LED Task", 4096, this, configMAX_PRIORITIES - 1, &m_taskHandle, 1);
 }
 
 void IndicatorLight::setState(IndicatorState state)

@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <cstdint>
-#include "ADC.h"
 using namespace std;
 
 template <typename T>

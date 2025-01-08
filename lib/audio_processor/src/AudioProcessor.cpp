@@ -55,6 +55,7 @@ void AudioProcessor::get_spectrogram_segment(float *output)
     // pull out the magnitude squared values
     for (int i = 0; i < m_energy_size; i++)
     {
+
         const float real = m_fft_output[i].r;
         const float imag = m_fft_output[i].i;
         const float mag_squared = (real * real) + (imag * imag);

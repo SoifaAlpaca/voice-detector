@@ -1,0 +1,21 @@
+\section{Power Management Unit}
+
+The Power Management Unit (PMU), is responsible for supplying voltage to the entire AFE circuit and also to the MCU. The aim of this project is to have a battery as its main voltage source, so, since these batteries generate $9V$, this value most be reduced to a value supported by the ESP 32, for this purpose, the LM7805 Linear Regulator was implemented, reducing the voltage to $5V$\textsuperscript{\cite{lm7805-datasheet}}. The complete PMU circuit is exposed in Figure \ref{fig:PMU}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.4]{Images/PMU.png}
+    \caption{Power Management Unit circuit}
+    \label{fig:PMU}
+\end{figure}
+
+Since the objective of this project is to remain on the entire time, the power consumed by the circuit is extremely important, where this value can not be very high. The total power consumed by the AFE circuit without any input signal is displayed in Figure \ref{fig:Power}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.25]{Images/Power.png}
+    \caption{AFE total power consumed}
+    \label{fig:Power}
+\end{figure}
+
+Observing the graphic above, the value for the power consumed by the AFE circuit is slightly high, but the complexity and number of component of this circuit explains this fact. 

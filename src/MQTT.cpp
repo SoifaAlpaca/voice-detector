@@ -35,8 +35,7 @@ void mqtt_loop(){
     if (!WiFi.isConnected()){
         init_wifi();
     }
-    if(no_mqtt)
-        return;
+    
     if (!client.connected()){
         reconnect();
     }
@@ -44,12 +43,13 @@ void mqtt_loop(){
 }
 
 void init_mqtt(){
-    
+
+    if (no_mqtt)
+        return;
+
     if (!WiFi.isConnected()){
         init_wifi();
     }
-    if (no_mqtt)
-        return;
 
     client.setServer(mqtt_server, mqttPort);
     client.setCallback(callback);
@@ -58,14 +58,13 @@ void init_mqtt(){
 
 void init_wifi(){
     // We start by connecting to a WiFi network
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    if (WiFi.waitForConnectResult() != WL_CONNECTED)
-    {
-        Serial.println("Connection Failed! Rebooting...");
-        delay(5000);
-        ESP.restart();
-    }
+
+    #if LOG_MESSAGE_MQTT
+        Serial.println();
+        Serial.print("Connecting to ");
+        Serial.println(ssid);
+    #endif
+        WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED){
     #if LOG_MESSAGE_MQTT

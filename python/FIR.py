@@ -114,7 +114,7 @@ def PlotWindow(FilterWindow):
 
 # Filter parameters                   # Filter order
 cutoff_freq = [400 * 2 * np.pi, 4*k * 2 * np.pi]     # [wp1, wp2]Cutoff frequency (in rad/s)
-sampling_rate = 16*k
+sampling_rate = 10*k
 stopband_frequency = [0.1 * 2 * np.pi, 5*k * 2 * np.pi]     #[ws1, ws2]
 Amin = -40  # Minimum attenuation in dB the filter windows with this requirement are hamming, hann and blackman
 
@@ -159,7 +159,7 @@ for window in windows:
     print(f"{window}\n{coefficients}")
 """
 PlotWindow(filters["hamming"])
-#FreqResponse(filters["hamming"])
+FreqResponse(filters["hamming"])
 
 GenFIRCppHeader(filters['blackman'],path='FIR.h')
 

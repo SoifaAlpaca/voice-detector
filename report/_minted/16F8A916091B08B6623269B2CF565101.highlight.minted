@@ -1,0 +1,24 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nt}{automation}\PYG{p}{:}\PYG{+w}{ }\PYG{k+kt}{!include}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{automations.yaml}
+\PYG{n+nt}{mqtt}\PYG{p}{:}\PYG{+w}{ }\PYG{k+kt}{!include}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mqtt.yaml}
+
+\PYG{n+nt}{input\PYGZus{}number}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{esp\PYGZus{}volume}\PYG{p}{:}
+\PYG{+w}{    }\PYG{n+nt}{icon}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{mdi:volume\PYGZhy{}medium}
+\PYG{+w}{    }\PYG{n+nt}{name}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{Volume}
+\PYG{+w}{    }\PYG{n+nt}{initial}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{30}
+\PYG{+w}{    }\PYG{n+nt}{min}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{1}
+\PYG{+w}{    }\PYG{n+nt}{max}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{100}
+\PYG{+w}{    }\PYG{n+nt}{step}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{1}
+
+\PYG{n+nt}{input\PYGZus{}text}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{mqtt\PYGZus{}value\PYGZus{}input}\PYG{p}{:}
+\PYG{+w}{    }\PYG{n+nt}{name}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{MQTT}\PYG{l+lScalar+lScalarPlain}{ }\PYG{l+lScalar+lScalarPlain}{Value}\PYG{l+lScalar+lScalarPlain}{ }\PYG{l+lScalar+lScalarPlain}{Input}
+\PYG{+w}{    }\PYG{n+nt}{initial}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nt}{max}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{255}
+
+\PYG{n+nt}{input\PYGZus{}boolean}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{led\PYGZus{}mode}\PYG{p}{:}
+\PYG{+w}{    }\PYG{n+nt}{name}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{LED}\PYG{l+lScalar+lScalarPlain}{ }\PYG{l+lScalar+lScalarPlain}{Mode}
+\PYG{+w}{    }\PYG{n+nt}{initial}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{off}
+\end{MintedVerbatim}

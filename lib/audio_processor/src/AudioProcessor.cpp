@@ -6,6 +6,7 @@
 
 #define EPSILON 1e-6
 
+// AudioProcessor constructor
 AudioProcessor::AudioProcessor(int audio_length, int window_size, int step_size, int pooling_size)
 {
     m_audio_length = audio_length;
@@ -17,6 +18,7 @@ AudioProcessor::AudioProcessor(int audio_length, int window_size, int step_size,
     {
         m_fft_size <<= 1;
     }
+    // allocate memory for the fft input, output and energy
     m_fft_input = static_cast<float *>(malloc(sizeof(float) * m_fft_size));
     m_energy_size = m_fft_size / 2 + 1;
     m_fft_output = static_cast<kiss_fft_cpx *>(malloc(sizeof(kiss_fft_cpx) * m_energy_size));
@@ -44,7 +46,8 @@ void AudioProcessor::get_spectrogram_segment(float *output)
 {
     // apply the hamming window to the samples
     m_hamming_window->applyWindow(m_fft_input);
-    // do the fft
+    // TODO Filtro depois da FFT
+    //  do the fft
     kiss_fftr(
         m_cfg,
         m_fft_input,
@@ -52,7 +55,6 @@ void AudioProcessor::get_spectrogram_segment(float *output)
     // pull out the magnitude squared values
     for (int i = 0; i < m_energy_size; i++)
     {
-
         const float real = m_fft_output[i].r;
         const float imag = m_fft_output[i].i;
         const float mag_squared = (real * real) + (imag * imag);
@@ -82,6 +84,7 @@ void AudioProcessor::get_spectrogram_segment(float *output)
     }
 }
 
+// takes a reader that can access the audio samples and an output buffer to write the spectrogram to
 void AudioProcessor::get_spectrogram(RingBufferAccessor *reader, float *output_spectrogram)
 {
     int startIndex = reader->getIndex();

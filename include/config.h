@@ -6,6 +6,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
+extern RTC_DATA_ATTR float volume;
 
 // I2S Microphone Settings
 #define USE_I2S_MIC_INPUT
@@ -32,7 +33,7 @@ extern PubSubClient client;
 #define PIN_LED 32
 #define TIME_MAX (2 * 60 * 1000)
 
-extern bool no_mqtt; // Declare with extern
+extern RTC_DATA_ATTR bool no_mqtt; // Declare with extern
 extern bool no_sleep;
 
 extern RTC_DATA_ATTR unsigned int sleep_time;

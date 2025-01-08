@@ -44,7 +44,6 @@ void AudioProcessor::get_spectrogram_segment(float *output)
 {
     // apply the hamming window to the samples
     m_hamming_window->applyWindow(m_fft_input);
-    //TODO Filtro depois da FFT
     // do the fft
     kiss_fftr(
         m_cfg,
@@ -53,6 +52,7 @@ void AudioProcessor::get_spectrogram_segment(float *output)
     // pull out the magnitude squared values
     for (int i = 0; i < m_energy_size; i++)
     {
+
         const float real = m_fft_output[i].r;
         const float imag = m_fft_output[i].i;
         const float mag_squared = (real * real) + (imag * imag);

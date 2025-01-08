@@ -15,9 +15,6 @@ After validating and successfully testing the user interaction and voice detecti
 
 To address this, audio processing tasks were pinned to Core 1 while WiFi operations were confined to Core 0, leveraging the dual-core architecture of the ESP32. Additionally, the I2S peripheral, critical for audio data handling, was configured with a higher interrupt priority to ensure timely processing. Despite these optimizations, the system's performance remained inadequate, indicating that the ESP32's computational resources are insufficient for handling both tasks simultaneously at the required level of performance.
 
-\textcolor{red}{METER NA SECCAO CERTA}
-Future work should explore the use of a more powerful MCU capable of handling the increased computational and memory demands. Possible candidates could be the ESP32-S3,STM32F746 or Teensy 4.1 .
-
 \subsection{Analog Filter}
 
 \subsubsection{Test}

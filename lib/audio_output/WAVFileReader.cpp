@@ -1,9 +1,6 @@
 #include <SPIFFS.h>
 #include <FS.h>
 #include "WAVFileReader.h"
-#include "config.h"
-
-RTC_DATA_ATTR float volume = 1;
 
 typedef struct
 {
@@ -85,7 +82,8 @@ int WAVFileReader::getFrames(Frame_t *frames, int number_frames)
         // if we only have one channel duplicate the sample for the right channel
         if (m_num_channels == 1)
         {
-            frames[i].left *= volume;
+            // TODO: FIXME:
+            frames[i].left *= 1;
             frames[i].right = frames[i].left;
         }
         else

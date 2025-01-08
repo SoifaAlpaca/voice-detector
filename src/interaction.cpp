@@ -2,19 +2,18 @@
 
 #include "config.h"
 #include "RTOSTask.h"
-#include "MQTT.h"
 
-String com_sleep     = "SLEEP";
-String com_volume    = "VOLUME";
-String com_set_sleep = "TIME_SLEEP";
-String com_no_sleep  = "NO_SLEEP";
-String com_set_led   = "LED";
-String com_set_mqtt  = "MQTT";
+String com_sleep        = "SLEEP";
+String com_volume       = "VOLUME";
+String com_set_sleep    = "TIME_SLEEP";
+String com_no_sleep     = "NO_SLEEP";
+String com_set_led      = "LED";
+String com_set_mqtt     = "MQTT";
 
-unsigned int get_number       (String s);
-void         update_sleep_time(unsigned int Time);
-void         set_volume       (unsigned int volume );
-void         set_led          (int i);
+unsigned int get_number         (String s);
+void         update_sleep_time  (unsigned int Time);
+void         set_volume         (unsigned int volume );
+void         set_led            (int i);
 void         set_sleep();
 
 void update_sleep_time(unsigned int Time){
@@ -75,12 +74,6 @@ void read_command( String command ){
     }else if( command.startsWith(com_set_mqtt) ){       
         
         no_mqtt = get_number(command) ? LOW : HIGH;
-        if(no_mqtt){
-            client.disconnect();
-        }else{
-            init_mqtt();
-        }
-
     }
 }
 

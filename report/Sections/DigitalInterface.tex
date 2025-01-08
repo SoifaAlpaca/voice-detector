@@ -15,7 +15,7 @@ The digital signal processing is divided into three main parts: I2S input, audio
 
 The DMA buffer (Direct Memory Access buffer) is a memory region used to transfer data between the I2S peripheral and the main memory without continuous CPU intervention. It is crucial for managing high-speed data streams, such as audio, ensuring efficient operation.
 
-In reception (Audio Input), the DMA buffer acts as an intermediate storage area where data received by the microphone is temporarily stored before being processed by the application. 
+In reception (Audio Input), the DMA buffer acts as an intermediate storage area where data received by the microphone is temporarily stored before being processed by the application, a diagram of the reception process is shown in figure \ref{fig:DMAReception}.
 
 The process of the DMA buffer in reception is:
 \begin{enumerate}
@@ -26,15 +26,31 @@ The process of the DMA buffer in reception is:
 
 To have a continuous audio retrieval, it was implemented a circular buffer. When the buffer is full, the DMA continues to write data to the buffer, overwriting the oldest data. This way, the audio processor can continuously process the audio data without interruptions.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Images/audio_input.png}
+    \caption{DMA buffer in reception.}
+    \label{fig:DMAReception}    
+\end{figure}
+
+
 In transmission, the DMA buffer is filled with data to be sent. The DMA reads the data from the buffer and automatically transfers it to the I2S amplifier, which transmits it to the speaker.
 
 The process of the DMA buffer in transmission is:
 \begin{enumerate}
     \item The WAV reader (program) writes data to the buffer.
-    \item The DMA transfers data from the buffer to the I2S peripheral.
+    \item The DMA transfers data from the buffer to the I2S amplifier.
     \item The I2S transmits the serialized data to the speaker.
-    \item When the buffer is empty, an event or interrupt is triggered to load new data for transmission.
 \end{enumerate}
+
+A diagram of the DMA buffer transmission is depicted in Figure \ref{fig:DMATransmission}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/audio_output.drawio.png}
+    \caption{DMA buffer in transmission.}
+    \label{fig:DMATransmission}    
+\end{figure}
 
 \subsection{Audio Input}
 
@@ -60,11 +76,11 @@ To configure the communication the I2S MEMS breakout board was set to record aud
 
 \subsection{Audio Output}
 
-The audio output was obtained with a MAX98357A I2S Class D amplifier that receives the audio signal in I2S format and outputs the audio signal to the speaker. The MAX98357A is a low-cost, low-power mono audio amplifier that is suitable for this application. The MAX98357A has a built-in DAC and PWM modulator that converts the digital audio signal to an analog audio signal. 
+The audio output was obtained with a MAX98357A I2S Class D amplifier that receives the audio signal in I2S format and outputs the audio signal to the speaker. The MAX98357A is a low-cost, low-power mono audio amplifier that is suitable for this application and has a built-in DAC and PWM modulator that converts the digital audio signal to an analog audio signal. 
 
-The MAX98357A was configured to receive the audio signal in both channels right and left, 16 bits per sample per channel and a sample rate of \SI{16}{\kilo \hertz} that is suitable for voice reproduction, the two channels were mixed to output the audio signal to the speaker because in this application it was only used one speaker.
+It was configured to receive the audio signal in both channels right and left, 16 bits per sample and a sample rate of \SI{16}{\kilo \hertz} that is suitable for voice reproduction, the two channels were mixed to output the audio signal to the speaker because in this application it was only used one speaker (mono).
 
-The amount of power that the MAX98357A can deliver is limited by the speaker impedance. The MAX98357A can deliver up to \SI{1}{\watt} of power to a \SI{8}{\ohm} speaker with a power supply voltage of \SI{5}{\volt}. 
+The amount of power that the MAX98357A can deliver is limited by the speaker impedance it can deliver up to \SI{1}{\watt} of power to a \SI{8}{\ohm} speaker with a power supply voltage of \SI{5}{\volt}, that is what was implemented in this project.
 
 To maximize the gain of the MAX98357, a pull down resistor of \SI{100}{\kilo \ohm} was connected to the gain pin of the amplifier.
 
@@ -72,7 +88,7 @@ The class D amplifiers are also known as switching amplifiers because they opera
 
 \subsection{Audio Processor}
 
-The audio processing was done with the ESP32 microcontroller that receives the digital audio signal from the I2S MEMS breakout board, processes the audio signal and sends the processed to the prediction model.
+The audio processing was done with the ESP32 microcontroller that receives the digital audio signal from the I2S MEMS breakout board, processes the audio signal and sends the processed to the prediction model presented below.
 
 The audio processor has to recreate the same process that was used for the training data and then convert the audio signal to a spectrogram.  
 
@@ -93,26 +109,46 @@ The spectrogram to a mel spectrogram that is a spectrogram where the frequencies
 
 \section{Digital Audio Recognition}
 
-To detect and recognize commands from the audio signal, a mechanism with to types of recognition was designed: recognition with a machine learning model implemented in the ESP32 using TensorFlow Lite and recognition outsourcing the process to the Wit.ai platform.
+To detect and recognize commands from the audio signal, a mechanism with to types of recognition was designed: recognition with a machine learning model implemented in the ESP32 using TensorFlow Lite and recognition outsourcing the process to the Wit.ai platform. A diagram of the voice recognition is shown in figure \ref{fig:VoiceRecognition}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/audio_proc.png}
+    \caption{Voice recognition block diagram.}
+    \label{fig:VoiceRecognition}
+\end{figure}
 
 \subsection{Model and TensorFlow Lite} 
-
+\label{sec:Model}
 The machine learning model was trained with the Google Speech Commands dataset that contains 65,000 one-second long utterances of 30 short words. The model was trained to detect the presence of a word in the audio signal. 
 
-The model was trained with a convolutional neural network of an open sourced Jupyter notebook, that predicts the presence of a word in the audio signal by analyzing the spectrogram of it. Then the trained model was converted to C code to be implemented in the ESP32.
+The training was done with a convolutional neural network of an open sourced Jupyter notebook, that predicts the presence of a word in the audio signal by analyzing the spectrogram of it, in Figure \ref{fig:Spectre} is an example of the spectrograms generated for the word selected. Then the trained model was converted to C code to be implemented in the ESP32.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/spec_marvin.png}
+    \caption{Spectrogram of the word selected.}
+    \label{fig:Spectre}
+\end{figure}
 
 The TensorFlow Lite library was used to implement the voice activity detection algorithm of the machine learning model. The TensorFlow Lite library is a lightweight version of the TensorFlow library that is optimized for mobile and embedded devices. 
 
-\subsection{Neural Network}
-
-The neural network as the functions to communicate with the model obtained(load an input and make a prediction).
+This solution has the advantage of being able to detect the presence of a word in the audio signal without the need to send the audio signal to the cloud, ensuring the privacy of the user. In other hand, the processing power of the ESP32 is limited, and the model can be heavy to run in the ESP32, diminishing the accuracy of the model and the number of tasks that the ESP32 can perform.
 
 \subsection{Interact with Wit.ai}
 
 The Wit.ai platform allows the development of voice recognition applications that can be used in the project. It has a REST API that allows the application to send audio data to the platform and receive the recognized text. The Wit.ai platform uses machine learning algorithms to recognize the speech and convert it to text. 
 
-To interact with the Wit.ai platform, the application has to send a POST request to the platform with the audio data. The platform will process the audio data and return the recognized text. To avoid having to buffer the entire audio sample in memory a chuncked a upload of the data was performed.
+To interact with the Wit.ai platform, the application has to send a POST request to the platform with the audio data. The platform will process the audio data and return the recognized text. To avoid having to buffer the entire audio sample in memory a chucked upload of the data was performed.
 
-A connection to wit.ai is created and then chuncks of data are uploaded until it collects sufficient audio to capture the user´s command. After that the results are returned from the API and the important relevant information is extracted (intent, name).
+A connection to wit.ai is created and then chunks of data are uploaded until it collects sufficient audio to capture the user´s command. After that the results are returned from the API and the important relevant information is extracted (intent, entity). The intents and entities trained in the wit.ai platform are shown in figure \ref{fig:WitAI}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/witai.png}
+    \caption{Intents and entities trained in the wit.ai platform.}
+    \label{fig:WitAI}
+\end{figure}
+
 
 

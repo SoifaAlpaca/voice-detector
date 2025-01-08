@@ -48,6 +48,28 @@ def calculate_margins(w, h):
         gain_margin = None
 
     return gain_margin, phase_margin
+ 
+def plotOscilloscopeCSV(path):
+    
+    df   = pd.read_csv(
+        path,
+        delimiter=',',
+        #on_bad_lines='skip',
+         low_memory=False
+        )
+
+    #print(df.head())
+
+    plt.figure(figsize=FigDim)
+    plt.plot(df['X'], df['CH1'], color=Blue, label="Filter Output" )
+    plt.plot(df['X'], df['CH2'], color=Orange,label="Comparator Output")
+    plt.title('Oscilloscope')
+    plt.xlabel('Time')
+    plt.ylabel('Volt')
+    #plt.grid(True)
+    plt.tight_layout()
+    plt.legend()
+    plt.show()
 
 def plotScoppyBode(path):
     
@@ -155,3 +177,5 @@ def PlotBode(num,den,labels=[],fmin = -1,fmax = 4,ppd = 1000,title = "Bode Magni
 
     plt.tight_layout()
     plt.show()
+
+plotOscilloscopeCSV("csv/Osciloscopio.csv")

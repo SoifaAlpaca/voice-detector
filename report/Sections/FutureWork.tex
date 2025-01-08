@@ -1,5 +1,34 @@
 \section{Future Work}
 
+
+\subsection{Microcontroller}
+
+As explain in section \ref{sec:SoftwareInt}, the ESP32 is not powerful enough to handle this project requirements, hence, future work should explore a more powerful MCU capable of handling the increased computational and memory demands. Possible candidates could be the ESP32-S3,STM32F746 or Teensy 4.1 .
+
+\subsection{Digitally controlled noise threshold }
+
+In order to improve the performance of the system, making it more flexible to its environment, a digitally controlled noise threshold could be a useful feature to have. 
+
+One solution to implement this feature, is to dynamically change what the comparator reference voltage. This solution presents a few issues, since the MCU goes to sleep.
+
+The first solution is to have a capacitor attached to the inverting input of a opAmp, in order to hold a voltage set by the MCU Digital to Analog Converter (DAC), as seen in Figure \ref{fig:CompCap}. This might not work if when the MCU enters sleep, the DAC goes to zero volt. Another short coming of this solution is that the capacitor will discharge over time. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.3]{Images/ComparatorCap.png}
+    \caption{Comparator with capacitor.}
+    \label{fig:CompCap}
+\end{figure}
+
+The second solution is to have $N$ pins of the MCU to act as a DAC, where all bit values are maintained with latches, this solutions is more complex in terms of implementation, but it is more robust. The circuit that implements this solutions is presented in Figure \ref{fig:LatchDAC}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.5]{Images/LatchCirc.png}
+    \caption{DAC with latched bits.}
+    \label{fig:LatchDAC}
+\end{figure}
+
 deep sleep after x time
 
 soft sleep after 2 mins

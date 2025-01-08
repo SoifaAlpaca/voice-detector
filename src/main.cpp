@@ -19,8 +19,6 @@ void setup(){
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, led_status);
     esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1); 
-    // startup SPIFFS for the wav files
-    SPIFFS.begin();
     ThreadsSetup();
 }
 

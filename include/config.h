@@ -30,7 +30,7 @@ extern PubSubClient client;
 
 #define WAKEUP_PIN GPIO_NUM_33
 #define PIN_LED 32
-#define TIME_MAX (2 * 60 * 1000)
+#define TIME_MAX (6 * 60 * 1000)
 
 extern bool no_mqtt; // Declare with extern
 extern bool no_sleep;

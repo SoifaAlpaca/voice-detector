@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "RTOSTask.h"
+#include "MQTT.h"
 
 String com_sleep        = "SLEEP";
 String com_volume       = "VOLUME";
@@ -74,6 +75,12 @@ void read_command( String command ){
     }else if( command.startsWith(com_set_mqtt) ){       
         
         no_mqtt = get_number(command) ? LOW : HIGH;
+        if(no_mqtt){
+            client.disconnect();
+        }else{
+            init_mqtt();
+        }
+
     }
 }
 

@@ -9,6 +9,7 @@ report/main.*
 
 src/Creds.cpp
 include/Creds.h
+report
 
 python/__pycache__
 ltspice/*

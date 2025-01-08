@@ -1,5 +1,59 @@
 \section{Implementation}
 
+This section presents the implementation of the system, including the hardware and software, as well as the testing of the analog and digital interfaces. The system was developed in modules, with the hardware and software components developed independently and later integrated. An imaged of the systems implementation is depicted in Figure \ref{fig:systemImplementation}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.1]{Images/implementation.png}
+    \caption{System Implementation.}
+    \label{fig:systemImplementation}
+\end{figure}
+
+\subsection{Digital Audio Implementation}
+
+To implement in software the digital audio interface, the ESP32 was used, as it has the necessary peripherals to handle the audio data and the WiFi communication. The ESP32 was programmed using the PlatformIO.
+
+To perform all the tasks required by the system in the digital audio interface a main task called Listen was created. This task is continually running and alternating between to states: Detect wake up word (detectWord) and Recognize command (recognizeCmd). A flow chart of the Listen task can be seen in Figure \ref{fig:ListenTaskFlowchart}.
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.15]{Images/listen.png}
+    \caption{Listen Task Flowchart.}
+    \label{fig:ListenTaskFlowchart}
+\end{figure}
+
+The code was divided into two main parts, the Wake up word detection (detectWord) and the command recognition (recognizeCmd). 
+
+
+The wake up word detection was implemented using a I2S input sampler to fetch the data and a Ml model to predict if the audio retrieved corresponds to the wake up word. A flowchart of the algorithm implemented is shown in Figure \ref{fig:detectWord}. This implementation used the word marvin as the wake up word to compare with the model trained. The result of the comparison with the model is a value between 0 and 1, where 0 means that the audio retrieved is not the wake up word and 1 means that the audio retrieved is the wake up word. If the value is above the 0.9 threshold, the system goes to the recognize command part.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.6]{Images/detectWord.png}
+    \caption{Detect Word Flowchart.}
+    \label{fig:detectWord}
+\end{figure}
+
+The detected command part, that is triggered after the wake up word is detected, was implemented using the same I2S input sampler to fetch the data and connection to the wit.ai API to recognize the command. In the wit.ai API, a model was trained to recognize the commands that the system can perform. A POST request is made to the wit.ai API with the audio data retrieved and the API returns with a the command recognized in a JSON format. The command recognized is then processed, by the intent processor, and the system performs the action associated with the command. 
+
+A flowchart of the algorithm implemented is shown in Figure \ref{fig:recognizeCmd}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.6]{Images/recognizeCmd.png}
+    \caption{Recognize Command Flowchart.}
+    \label{fig:recognizeCmd}
+\end{figure}
+
+The intent processor described in the Command Recognition flowchart is a function that receives the command recognized and performs the action associated with the command. The actions that the system can perform are: play music, stop music and tell a joke. A flowchart of the intent processor is shown in Figure \ref{fig:intentProcessor}. The DMA buffer for transmission block was described in the section Digital Signal Processing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.6]{Images/intentProcessor.png}
+    \caption{Intent Processor Flowchart.}
+    \label{fig:intentProcessor}
+\end{figure}
+
 \subsection{Software integration}
 \label{sec:SoftwareInt}
 Running on the ESP32 microcontroller, the firmware manages the voice activity detection, system control, and communication tasks, with external platforms for data visualization and interaction. A flowchart representing the code running on the MCU can be seen in Figure \ref{fig:firmwareFlowchart}. 
@@ -15,16 +69,35 @@ After validating and successfully testing the user interaction and voice detecti
 
 To address this, audio processing tasks were pinned to Core 1 while WiFi operations were confined to Core 0, leveraging the dual-core architecture of the ESP32. Additionally, the I2S peripheral, critical for audio data handling, was configured with a higher interrupt priority to ensure timely processing. Despite these optimizations, the system's performance remained inadequate, indicating that the ESP32's computational resources are insufficient for handling both tasks simultaneously at the required level of performance.
 
-\subsection{Analog Filter}
+\subsection{Analog Front End}
+
+To help with the calibration to reach the correct level of gain for the implementation, the second resistor in the Pre-Amp circuit, $R_{b2}$ was changed to a potentiometer, thus, through testing, the correct value for the final gain of the Pre-Amp was reached, which guarantees of the human voice detection in any environment.
 
 \subsubsection{Test}
+
+To test and verify the implemented filter circuit, an analysis, equal to the AC analysis made during the simulations, was carried out, with the help of the ADALM 2000, the resulting frequency response diagram can be seen in Figure \ref{fig:AnalogFilterBodeScoppy}.
 
 \begin{figure}[H]
     \centering
     \includegraphics*[scale = 0.5]{Images/AnalogFilterScoppyBode.png}
-    \caption{Analog Filter Bode.}
+    \caption{Implemented Filter Bode Diagram.}
     \label{fig:AnalogFilterBodeScoppy}
 \end{figure}
+
+The response above presents the expected behavior, with just a small difference in the first Cutoff Frequency, where the overshoot how appeared before disappeared. This change will not cause any problems for the performance of the Bandpass Filter.
+
+Finally, to test and verify the complete Analog Front End circuit, an oscilloscope was connected to the output of the filter and the comparator. The final results of this test are exposed in Figure \ref{fig:AFETest}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale = 0.5]{Images/AFEtest.png}
+    \caption{Analog Front End final test.}
+    \label{fig:AFETest}
+\end{figure}
+
+Both signals have different scales and reference points, because of this fact, the output of the filter does not appear with the correct values in the graphic above. 
+
+With this information in mind, form this test, it can be concluded that all stages of the Analog Front End worked as expected, from the Pre-Amp, which was able to amplify the signal generated by the human voice in moment $510$ to $525$ to a value high enough to ensure the correct functioning of the rest of the circuit, moving on to the Sixth Order Bandpass Filter, where only the signal expected passed to the final stage of the AFE, expected some disturbances, which did not cause any false wake up signal to be read by the ESP32, since these were not superior to the value of the Comparator circuit. 
 
 \section{Digital Interface}
 
